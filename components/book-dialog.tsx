@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { addBook, updateBook, type BookInput } from "@/lib/data/books";
+import { addBook, setBookDone, updateBook, type BookInput } from "@/lib/data/books";
 import type { Book } from "@/lib/db";
 
 export type BookDialogProps = {

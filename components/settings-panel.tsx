@@ -25,7 +25,7 @@ export function SettingsPanel() {
   const { state, exportToFile, importFromFile } = useDatabaseTransfer(database);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
 
-  function chooseFile(files: File[], rejected: File[]) {
+  function chooseFile(files: File[], rejected: RejectedFile[]) {
     if (rejected.length > 0 || files.length === 0) {
       setPendingFile(null);
       return;

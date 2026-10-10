@@ -6,7 +6,7 @@
  */
 export const identity = {
   name: "Reading list",
-  description: "A reading list for books I want to read: title, author, a note on why, and a done checkbox.",
+  description: "A personal reading list: the books you want to read, why you want them, and what you have finished.",
   accent: "#7c3aed",
   initial: "R",
 } as const;

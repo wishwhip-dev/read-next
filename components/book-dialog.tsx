@@ -76,11 +76,6 @@ function BookForm({ book, onDone }: { book: Book | null; onDone: () => void }) {
         toast.success(`Saved “${input.title}”.`);
       } else {
         await addBook(input);
-        if (done) {
-          // Added from the edit shape of the form, where the read box is offered.
-          const added = await addBook(input).catch(() => null);
-          if (added) await setBookDone(added.id, true);
-        }
         toast.success(`Added “${input.title}” to your list.`);
       }
       onDone();

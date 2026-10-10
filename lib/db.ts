@@ -5,19 +5,21 @@
  * that describes the product: which tables exist, what is indexed, how the schema has changed over
  * time, and what a first visit starts with.
  *
- * **The schema below is an example and nobody has data in it.** If you are building this
- * application for the first time, replace the tables in version 1 with your own, rename the
- * database, and replace or delete the seed alongside them — do not add a version 2 that drops
- * `notes`. The "never edit a shipped version" rule in `docs/storage.md` binds from your first
- * deployment onward, not before it.
+ * This is version 1 of a personal reading list. The list starts empty by design: an empty list
+ * shows the app's own invitation to add the first book, so there is no example content to seed.
  */
 import { defineDatabase } from "@/lib/storage/database";
 
-export type Note = {
+export type Book = {
   id: string;
   title: string;
-  body: string;
-  /** Epoch millis. Indexed, because the list is ordered by it. */
+  author: string;
+  /** Why I want to read it. May be empty. */
+  note: string;
+  done: boolean;
+  /** Epoch millis. Indexed, because the list is ordered by it — newest first. */
+  createdAt: number;
+  /** Epoch millis, so an edit can be timestamped even though nothing is sorted by it. */
   updatedAt: number;
 };
 
@@ -26,36 +28,15 @@ export function newId(): string {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-/** What a first visit opens to. An app that opens empty looks broken. */
-const SAMPLE_NOTES: Note[] = [
-  {
-    id: "sample-welcome",
-    title: "This note came with the app",
-    body: "It was written once, on your first visit. Delete it and it stays deleted — the seed does not refill a list you emptied on purpose.",
-    updatedAt: Date.now(),
-  },
-  {
-    id: "sample-storage",
-    title: "Everything here lives in this browser",
-    body: "No account, no sync, no other visitor can see it. Export to a file to carry it anywhere else.",
-    updatedAt: Date.now() - 60_000,
-  },
-];
-
-export const database = defineDatabase<{ notes: Note }>({
+export const database = defineDatabase<{ books: Book }>({
   // Part of the origin's storage identity. Renaming it does not migrate anything — it points the
   // application at a different, empty database and abandons the old one in place. That is exactly
   // what you want on a first build, and never what you want afterwards.
-  name: "starter-app",
+  name: "reading-list",
   versions: [
-    // Only the primary key and the properties queried on. `title` and `body` are stored but never
-    // filtered or sorted by, so indexing them would cost writes and buy nothing.
-    { version: 1, stores: { notes: "id, updatedAt" } },
+    // Only the primary key and the property the list is ordered by. `title`, `author`, `note` and
+    // `done` are stored but never filtered or sorted by, so indexing them would cost writes and
+    // buy nothing.
+    { version: 1, stores: { books: "id, createdAt" } },
   ],
-  // Written once, inside `ready()`, in one transaction with its own marker. Do not hand-roll this:
-  // no `meta` table, no flag, no promise to dedupe a double mount — see `docs/storage.md`.
-  seed: {
-    tables: ["notes"],
-    run: async (db) => { await db.notes.bulkAdd(SAMPLE_NOTES); },
-  },
 });

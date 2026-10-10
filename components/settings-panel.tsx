@@ -7,7 +7,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { MovePanel } from "@/components/move-panel";
-import { FileDrop, type RejectedFile } from "@/components/file-drop";
+import { FileDrop } from "@/components/file-drop";
+import type { RejectedFile } from "@/lib/files";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {

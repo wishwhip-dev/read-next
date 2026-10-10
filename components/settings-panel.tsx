@@ -110,7 +110,7 @@ export function SettingsPanel() {
             )}
             {state.kind === "imported" && (
               <p className="text-sm text-muted-foreground">
-                Loaded: {state.result.added} book{state.result.added === 1 ? "" : "s"} added.
+                Loaded: {state.result.rows} book{state.result.rows === 1 ? "" : "s"} written to the list.
               </p>
             )}
           </div>
